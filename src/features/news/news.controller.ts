@@ -57,7 +57,7 @@ export class NewsController {
   //Retrive the details return by News Api
   @Get('newsapi')
   async getApiNews() {
-    // return await this.newsService.getApiNews();
+    return await this.getNews('business');
   }
 
   @Get('mostrecent')
