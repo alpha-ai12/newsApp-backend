@@ -172,44 +172,38 @@ export class NewsService {
           const url = await this.getOgImage(newsDetails.link);
           newsDetails.image_url = url;
         }
-        const API_URL = process.env.CHATGPT_API_URL;
-        const API_KEY = process.env.API_KEY;
-        const message = {
-          title: newsDetails.title,
-          content: newsDetails.content,
-          description: newsDetails.description,
-        };
+        // const API_URL = process.env.CHATGPT_API_URL;
+        // const API_KEY = process.env.API_KEY;
+        // const message = {
+        //   title: newsDetails.title,
+        //   content: newsDetails.content,
+        //   description: newsDetails.description,
+        // };
 
-        const feedMessage =
-          JSON.stringify(message) +
-          '1.Rephrase the title, description, content 2. convert content data to html format 3. return title, description and content  in only JSON format and no other extra text';
-        const body = {
-          model: 'gpt-3.5-turbo',
-          messages: [{ role: 'system', content: feedMessage }],
-        };
-        let jsonResponse;
+        // const feedMessage =
+        //   JSON.stringify(message) +
+        //   '1.Rephrase the title, description, content 2. convert content data to html format 3. return title, description and content  in only JSON format and no other extra text';
+        // const body = {
+        //   model: 'gpt-3.5-turbo',
+        //   messages: [{ role: 'system', content: feedMessage }],
+        // };
+        // let jsonResponse;
+        // try {
+        //   const res = await fetch(API_URL, {
+        //     method: 'POST',
+        //     headers: {
+        //       'Content-Type': 'application/json',
+        //       Authorization: `Bearer ${API_KEY}`,
+        //     },
+        //     body: JSON.stringify(body),
+        //   });
+        //   const news = await res.json();
+        //   jsonResponse = news.choices[0].message.content;
+        // } catch (error) {
+        //   console.log('ERROR!!!!1=======', error);
+        // }
         try {
-          const res = await fetch(API_URL, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${API_KEY}`,
-            },
-            body: JSON.stringify(body),
-          });
-          const news = await res.json();
-          jsonResponse = news.choices[0].message.content;
-        } catch (error) {
-          console.log('ERROR!!!!1=======', error);
-        }
-        try {
-          // const jsonStartIndex = jsonResponse.indexOf('{');
-          // const jsonEndIndex = jsonResponse.lastIndexOf('}');
-          // const jsonString = jsonResponse.substring(
-          //   jsonStartIndex,
-          //   jsonEndIndex + 1,
-          // );
-          const jsonData = JSON.parse(jsonResponse);
+          // const jsonData = JSON.parse(jsonResponse);
           
           //store image in s3
           const {detail}: any = await this.uploadIntoS3(newsDetails.image_url)
@@ -218,10 +212,10 @@ export class NewsService {
             title: newsDetails.title,
             content: newsDetails.content,
             description: newsDetails.description,
-            newTitle: jsonData.title,
-            newContent: jsonData.content,
-            newDescription: jsonData.description,
-            slugid: slugify(jsonData.title, { replacement: '-', lower: true }),
+            newTitle: null,//jsonData.title,
+            newContent: null,//jsonData.content,
+            newDescription: null,//jsonData.description,
+            slugid: slugify(newsDetails.title, { replacement: '-', lower: true }),
             image_url: detail.url
           };
           return dbData;
@@ -486,7 +480,7 @@ export class NewsService {
     return await this.validNewsDataApiKey(apiKeyIndex)
   }
 
-  // @Cron('*/15 * * * *')
+  @Cron('*/2 * * * *')
   async feedWithGptTurbo(): Promise<any> {
     try {
       let count = 0;
