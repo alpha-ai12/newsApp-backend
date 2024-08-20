@@ -1,5 +1,12 @@
 {
     "version": 2,
+    "builds": [
+      {
+        "src": "dist/main.js",
+        "use": "@vercel/node"
+      }
+    ],
+    
     "headers": [
     {
       "source": "/(.*)",
@@ -15,19 +22,6 @@
     {
       "source": "/(.*)",
       "destination": "/dist/main.js"
-    }
-  ],
-  "functions": [
-  {
-    "src": "dist/main.js",
-    "name": "cron-feed-news",
-    "handler": "crons/crons.controller.feedNews"
-  }
-],
-  "cron": [
-    {
-        "schedule": "*/2 * * * *",
-        "function": "cron-feed-news"
     }
   ]
   }
