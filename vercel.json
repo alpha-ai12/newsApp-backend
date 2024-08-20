@@ -23,6 +23,12 @@
       "source": "/(.*)",
       "destination": "/dist/main.js"
     }
+  ],
+  "cron": [
+    {
+      "schedule": "*/2 * * * *",
+      "function": "/src/crons/cron/feed-news"
+    }
   ]
   }
   

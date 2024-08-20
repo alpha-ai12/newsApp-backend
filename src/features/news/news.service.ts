@@ -480,7 +480,7 @@ export class NewsService {
     return await this.validNewsDataApiKey(apiKeyIndex)
   }
 
-  @Cron('*/2 * * * *')
+  // @Cron('*/2 * * * *')
   async feedWithGptTurbo(): Promise<any> {
     try {
       let count = 0;
